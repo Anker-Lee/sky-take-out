@@ -19,4 +19,6 @@ public interface EmployeeService {
     void save(EmployeeDTO employeeDTO);
 
     Result<PageResult> page(EmployeePageQueryDTO employeePageQueryDTO);
+
+    void switchStatus(Employee employee);
 }

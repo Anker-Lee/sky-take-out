@@ -87,4 +87,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         return Result.success(pageResult);
     }
 
+    @Override
+    public void switchStatus(Employee employee) {
+        employeeMapper.update(employee);
+    }
+
 }

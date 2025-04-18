@@ -94,4 +94,16 @@ public class EmployeeController {
         log.info("分页查询，参数: {}", employeePageQueryDTO);
         return employeeService.page(employeePageQueryDTO);
     }
+
+    @PostMapping("/status/{status}")
+    public Result switchStatus(@PathVariable("status") Integer status, Long id) {
+        log.info("启用禁用员工，参数: {}, {}", status, id);
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+        employeeService.switchStatus(employee);
+        return Result.success();
+
+    }
 }
