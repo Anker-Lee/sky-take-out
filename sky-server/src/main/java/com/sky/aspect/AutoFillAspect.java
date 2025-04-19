@@ -42,7 +42,7 @@ public class AutoFillAspect { // 切面类：切面所在的类
         OperationType operationType = autoFill.value(); // 获取注解的属性
 
         // 2.2 获取当前被拦截的方法的参数--实体对象
-        Object args[] = joinPoint.getArgs();
+        Object[] args = joinPoint.getArgs();
         if (args == null || args.length == 0) {
             return;
         }
