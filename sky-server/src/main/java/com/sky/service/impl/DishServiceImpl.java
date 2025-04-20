@@ -35,6 +35,8 @@ public class DishServiceImpl implements DishService {
     DishFlavorMapper dishFlavorMapper;
     @Autowired
     private SetmealDishMapper setmealDishMapper;
+    @Autowired
+    private SetmealMapper setmealMapper;
 
     @Override
     @Transactional
@@ -76,8 +78,8 @@ public class DishServiceImpl implements DishService {
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             }
 
-            SetmealDish setmealDish = setmealDishMapper.getByDishId(dishId);
-            if (setmealDish != null) {
+            List<SetmealDish> setmealDishes = setmealDishMapper.getByDishId(dishId);
+            if (setmealDishes != null && !setmealDishes.isEmpty()) {
                 throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
             }
         });
@@ -120,6 +122,39 @@ public class DishServiceImpl implements DishService {
             });
 
             dishFlavorMapper.insertBatch(flavors);
+        }
+    }
+
+    @Override
+    public List<Dish> list(Long categoryId) {
+        Dish dish = Dish.builder()
+                .categoryId(categoryId)
+                .status(StatusConstant.ENABLE)
+                .build();
+        return dishMapper.list(dish);
+    }
+
+    @Override
+    public void switchStatus(Integer status, Long id) {
+        Dish dish = Dish.builder()
+            .status(status)
+            .id(id)
+            .build();
+
+        dishMapper.update(dish);
+
+        // 如果为停售，包含菜品的套餐也停售。
+        if (Objects.equals(status, StatusConstant.DISABLE)) {
+            List<SetmealDish> setmealDishes = setmealDishMapper.getByDishId(id);
+            if (setmealDishes != null && !setmealDishes.isEmpty()) {
+                setmealDishes.forEach(setmealDish -> {
+                    Setmeal setmeal = Setmeal.builder()
+                            .status(StatusConstant.DISABLE)
+                            .id(setmealDish.getSetmealId())
+                            .build();
+                    setmealMapper.update(setmeal);
+                });
+            }
         }
     }
 }

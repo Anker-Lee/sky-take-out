@@ -7,6 +7,7 @@ import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
+import io.swagger.models.auth.In;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,4 +57,20 @@ public class DishController {
         dishService.updateWithFlavor(dishDTO);
         return Result.success();
     }
+
+    @GetMapping("/list")
+    public Result<List<Dish>> list(Long categoryId) {
+        log.info("根据分类 id 查询: {}", categoryId);
+        List<Dish> dishes = dishService.list(categoryId);
+        return Result.success(dishes);
+    }
+
+    @PostMapping("/status/{status}")
+    public Result switchStatus(@PathVariable Integer status, Long id) {
+        log.info("起售/停售菜品, status: {}, id: {}", status, id);
+        dishService.switchStatus(status, id);
+        return Result.success();
+    }
+
+
 }
