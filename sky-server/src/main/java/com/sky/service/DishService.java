@@ -9,7 +9,7 @@ import com.sky.vo.DishVO;
 import java.util.List;
 
 public interface DishService {
-    void save(DishDTO dishDTO);
+    void saveWithFlavor(DishDTO dishDTO);
 
     PageResult pageQuery(DishPageQueryDTO dishPageQueryDTO);
 

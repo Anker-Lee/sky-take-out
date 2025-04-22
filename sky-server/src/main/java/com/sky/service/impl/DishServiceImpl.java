@@ -41,7 +41,7 @@ public class DishServiceImpl implements DishService {
 
     @Override
     @Transactional
-    public void save(DishDTO dishDTO) {
+    public void saveWithFlavor(DishDTO dishDTO) {
         dishDTO.setStatus(StatusConstant.ENABLE);
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);

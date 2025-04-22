@@ -25,14 +25,14 @@ public class RedisConfiguration {
         // 用于创建与 Redis 数据库的连接。它是 Redis 操作的核心组件之一，负责管理与 Redis 服务器的底层连接。
         // 设置 Redis key 的序列化器
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        //设置value序列化⽅式
-        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
-        //设置hash中field字段序列化⽅式
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        //设置hash中value的序列化⽅式
-        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
-        //5.初始化参数设置
-        redisTemplate.afterPropertiesSet();
+//        //设置value序列化⽅式
+//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+//        //设置hash中field字段序列化⽅式
+//        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+//        //设置hash中value的序列化⽅式
+//        redisTemplate.setHashValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+//        //5.初始化参数设置
+//        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 }
