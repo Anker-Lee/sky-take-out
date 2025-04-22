@@ -9,9 +9,9 @@ import com.sky.mapper.DishMapper;
 import com.sky.mapper.SetmealMapper;
 import com.sky.mapper.ShoppingCartMapper;
 import com.sky.service.ShoppingCartService;
-import com.sky.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +24,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final DishMapper dishMapper;
     private final SetmealMapper setmealMapper;
 
+    @Autowired
     public ShoppingCartServiceImpl(ShoppingCartMapper shoppingCartMapper, DishMapper dishMapper, SetmealMapper setmealMapper) {
         this.shoppingCartMapper = shoppingCartMapper;
         this.dishMapper = dishMapper;
@@ -42,7 +43,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (shoppingCarts != null && !shoppingCarts.isEmpty()) {
             ShoppingCart cart = shoppingCarts.get(0);
             cart.setNumber(cart.getNumber() + 1);
-            shoppingCartMapper.upateNumberById(cart);
+            shoppingCartMapper.updateNumberById(cart);
         } else {
             // 没有再添加
             Long dishId = shoppingCart.getDishId();
@@ -63,5 +64,39 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             shoppingCartMapper.insert(shoppingCart);
         }
 
+    }
+
+    @Override
+    public List<ShoppingCart> list() {
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .userId(BaseContext.getCurrentId())
+                .build();
+        return shoppingCartMapper.list(shoppingCart);
+    }
+
+    @Override
+    public void clean() {
+        shoppingCartMapper.deleteByUserId(BaseContext.getCurrentId());
+    }
+
+    @Override
+    public void sub(ShoppingCartDTO shoppingCartDTO) {
+        ShoppingCart shoppingCart = new ShoppingCart();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+        shoppingCart.setUserId(BaseContext.getCurrentId());
+
+        // 先查询
+        List<ShoppingCart> shoppingCarts = shoppingCartMapper.list(shoppingCart);
+        // 有就修改数量
+        if (shoppingCarts != null && !shoppingCarts.isEmpty()) {
+            ShoppingCart cart = shoppingCarts.get(0);
+            if (cart.getNumber() - 1 == 0) {
+                shoppingCartMapper.deleteById(cart);
+            } else  {
+                cart.setNumber(cart.getNumber() - 1);
+                shoppingCartMapper.updateNumberById(cart);
+            }
+
+        }
     }
 }
