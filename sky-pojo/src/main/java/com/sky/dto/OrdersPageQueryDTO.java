@@ -1,5 +1,6 @@
 package com.sky.dto;
 
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -7,15 +8,16 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class OrdersPageQueryDTO implements Serializable {
 
-    private int page;
+    private int page; // 页码
 
     private int pageSize;
 
     private String number;
 
-    private  String phone;
+    private String phone;
 
     private Integer status;
 
