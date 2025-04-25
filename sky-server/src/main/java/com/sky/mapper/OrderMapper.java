@@ -2,11 +2,11 @@ package com.sky.mapper;
 
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.entity.Orders;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
-import org.aspectj.weaver.ast.Or;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,4 +35,10 @@ public interface OrderMapper {
 
     @Select("select * from orders where id = #{id}")
     Orders getById(Long id);
+
+    @Select("select count(*) from orders where status =#{status}")
+    Integer countStatus(Integer status);
+
+    @Select("select * from  orders where status = #{status} and order_time < #{orderTime}")
+    List<Orders> getByStatusAndTimeLT(Integer status, LocalDateTime orderTime);
 }
